@@ -30,4 +30,4 @@ jobs:
         api_key: ${{ secrets.FORESIGHT_PROJECT_WALL_APIKEY }}
         test_format: JUNIT
         test_framework: JUNIT
-        test_path: ./termux/build/test-results/**
+        test_path: ./**/build/test-results/**
