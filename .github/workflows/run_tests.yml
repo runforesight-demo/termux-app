@@ -1,21 +1,33 @@
 name: Unit tests
 
 on:
-  push:
-    branches:
-      - master
-      - android-10
+  workflow_dispatch:
   pull_request:
-    branches:
-      - master
-      - android-10
+    types: [opened, reopened]
+
+env:
+  FORESIGHT_UPLOADER_SIGNER_URL: https://upload.service.runforesight.us
+  WORKFLOW_TELEMETRY_BASE_URL: https://api.service.runforesight.us
 
 jobs:
   testing:
     runs-on: ubuntu-latest
     steps:
+    - name: Collect Workflow Telemetry
+      if: always()
+      uses: runforesight/foresight-workflow-kit-action@v1
+      with:
+        api_key: ${{ secrets.FORESIGHT_PROJECT_WALL_APIKEY }}
     - name: Clone repository
       uses: actions/checkout@v3
     - name: Execute tests
       run: |
         ./gradlew test
+    - name: Analyze Test and/or Coverage Results
+      uses: runforesight/foresight-test-kit-action@v1
+      if: ${{ always() }}
+      with:
+        api_key: ${{ secrets.FORESIGHT_PROJECT_WALL_APIKEY }}
+        test_format: JUNIT
+        test_framework: JUNIT
+        test_path: ./termux/build/test-results/**
