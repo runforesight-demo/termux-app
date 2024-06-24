@@ -69,6 +69,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import java.util.Arrays;
 
+
+
 /**
  * A terminal emulator activity.
  * <p/>
